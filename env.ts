@@ -8,7 +8,12 @@ const envSchema = z.object({
             z.literal('production'),
         ])
         .default('development'),
-    DATABASE_URL: z.url()
+    DATABASE_URL: z.url(),
+    DATABASE_USER: z.string(),
+    DATABASE_PASSWORD: z.string(),
+    DATABASE_NAME: z.string(),
+    DATABASE_HOST: z.string(),
+    DATABASE_PORT: z.number()
 })
 
 const processEnv = envSchema.parse(process.env)
