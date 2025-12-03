@@ -1,10 +1,14 @@
+"use-client";
+
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
-interface HeaderProps {
-    activePage: 'home' | 'menu' | 'accessories'; // Untuk menandai menu aktif
+export interface Header1Props {
+    activePage: 'home' | 'coffee' | 'accessories' | 'none'; // Untuk menandai menu aktif
 }
 
-const Header1: React.FC<HeaderProps> = ({ activePage }) => {
+const Header1: React.FC<Header1Props> = ({ activePage }) => {
 
     // Fungsi pembantu untuk menentukan kelas aktif pada navigasi
     const getNavLinkClass = (page: string) => {
@@ -56,7 +60,7 @@ const Header1: React.FC<HeaderProps> = ({ activePage }) => {
 
                     {/* Tombol Keranjang */}
                     <button className="bg-stone-200 text-amber-700 px-3 py-1.5 rounded-full ml-4 hover:bg-stone-300 transition-colors shadow-inner text-sm font-bold">
-                        🛒 (0)
+                        <FontAwesomeIcon icon={faCartShopping} /> (0)
                     </button>
                 </nav>
             </div>

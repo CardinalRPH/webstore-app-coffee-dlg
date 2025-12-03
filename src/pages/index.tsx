@@ -15,6 +15,8 @@ import Footer from '@/components/layout-component/Footer';
 import Header from '@/components/layout-component/Header1';
 import ProductCard from '@/components/ProductCard';
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComment, faPlus, faStar } from '@fortawesome/free-solid-svg-icons';
 
 // Asumsikan ProductCard.tsx sudah tersedia
 
@@ -113,7 +115,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Header/Navbar */}
-      <Header activePage='home'/>
+      <Header activePage='home' />
 
       {/* 1. HERO SECTION (Gaya Modern Split) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white shadow-xl rounded-2xl my-8">
@@ -158,7 +160,7 @@ const HomePage: React.FC = () => {
       {/* 2. SECTION: PRODUK TERBARU */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-4xl font-extrabold text-stone-800 mb-10 text-center relative">
-          ✨ Produk Terbaru dari Lab Kami
+          <FontAwesomeIcon icon={faPlus}/> Produk Terbaru dari Lab Kami
           <span className="block w-20 h-1 bg-amber-600 mx-auto mt-2"></span>
         </h2>
 
@@ -197,7 +199,7 @@ const HomePage: React.FC = () => {
       {/* 3. SECTION: PRODUK REKOMENDASI */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-4xl font-extrabold text-stone-800 mb-10 text-center relative">
-          ⭐ Produk Rekomendasi (Paling Laris)
+          <FontAwesomeIcon icon={faStar}/> Produk Rekomendasi (Paling Laris)
           <span className="block w-20 h-1 bg-amber-600 mx-auto mt-2"></span>
         </h2>
 
@@ -225,7 +227,7 @@ const HomePage: React.FC = () => {
       <section className="bg-white py-16 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-stone-800 mb-10 text-center">
-            💬 Testimoni: Apa Kata Mereka?
+            <FontAwesomeIcon icon={faComment}/> Testimoni: Apa Kata Mereka?
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -235,7 +237,7 @@ const HomePage: React.FC = () => {
                   {/* Rating Bintang */}
                   <div className="flex mb-3 text-amber-500">
                     {Array(testimonial.rating).fill(0).map((_, i) => (
-                      <span key={i} className="text-xl">⭐</span>
+                      <FontAwesomeIcon icon={faStar} key={i} />
                     ))}
                   </div>
 
@@ -253,7 +255,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Footer */}
-     <Footer/>
+      <Footer />
     </div>
   );
 };
