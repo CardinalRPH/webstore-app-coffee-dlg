@@ -1,19 +1,25 @@
 "use-client";
-
-import { formatCurrency } from '@/utils';
-import type { CartItem } from '@/types/orderTypes';
-import { ReactElement, useState } from 'react';
-import CartCardList from '@/components/order-components/CartCardList';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useMemo, ReactElement } from 'react';
 import { NextPageWithLayout } from '../_app';
 import RootLayout from '@/components/Layout/RootLayout';
+import CartCardList from '@/components/order-components/CartCardList';
+import CheckoutModal from '@/components/order-components/CartCoModal';
 // Asumsikan Header.tsx sudah tersedia
 
-// --- (1) Interface Item Keranjang ---
+// --- (1) Interface Item Keranjang (Sama) ---
+interface CartItem {
+    id: number;
+    productId: number;
+    name: string;
+    price: number;
+    imageUrl: string;
+    quantity: number;
+    variant?: string;
+}
 
-// --- (2) Data Keranjang Tiruan ---
+// --- Data Keranjang & Biaya (Sama) ---
 const initialCartItems: CartItem[] = [
+    // ... (item-item yang sudah ada di keranjang)
     {
         id: 1,
         productId: 101,
@@ -31,29 +37,48 @@ const initialCartItems: CartItem[] = [
         imageUrl: 'https://via.placeholder.com/100x100?text=Grinder',
         quantity: 1,
     },
-    {
-        id: 3,
-        productId: 205,
-        name: 'Blend Mantap Pagi',
-        price: 115000,
-        imageUrl: 'https://via.placeholder.com/100x100?text=Blend',
-        quantity: 3,
-        variant: 'Whole Bean (Biji Utuh)',
-    },
+    // ...
 ];
 
-const SHIPPING_COST = 30000; // Biaya pengiriman tiruan
+export const SHIPPING_OPTIONS = [
+    { id: 'REG', name: 'Reguler (3-5 Hari)', cost: 30000 },
+    { id: 'YES', name: 'Express (1-2 Hari)', cost: 55000 },
+    { id: 'ECO', name: 'Ekonomi (5-7 Hari)', cost: 20000 },
+];
 
+
+
+// --- (3) Komponen Halaman Keranjang Utama ---
 const CartPage: NextPageWithLayout = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+    const [isModalOpen, setIsModalOpen] = useState(false); // State Modal
+    const [currentShippingCost, setCurrentShippingCost] = useState(SHIPPING_OPTIONS[0].cost);
+
+    // Fungsi Format Mata Uang
+    const formatCurrency = (amount: number) => {
+        return `Rp${amount.toLocaleString('id-ID')}`;
+    };
 
     // --- LOGIKA PERHITUNGAN ---
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const grandTotal = subtotal > 0 ? subtotal + SHIPPING_COST : 0; // Hanya tambahkan biaya kirim jika ada item
+    const subtotal = useMemo(() =>
+        cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        [cartItems]
+    );
 
-    // --- HANDLER KERANJANG ---
+    // Total biaya kirim hanya ditambahkan jika ada item di keranjang
+    const finalShippingCost = subtotal > 0 ? currentShippingCost : 0;
+    const grandTotal = subtotal + finalShippingCost;
 
-    // Mengubah Kuantitas
+
+    // Handler yang dipanggil dari Modal
+    const handleCheckoutConfirm = (shippingMethod: string, address: string, cost: number) => {
+        setCurrentShippingCost(cost); // Update biaya kirim final di halaman utama
+        console.log(`Checkout dimulai: Alamat: ${address}, Kurir: ${shippingMethod}, Biaya Kirim: ${formatCurrency(cost)}`);
+        alert(`Sukses! Siap checkout dengan ${shippingMethod}. Total biaya kirim baru: ${formatCurrency(cost)}`);
+        // Lanjutkan ke halaman checkout final/pembayaran di aplikasi nyata
+    };
+
+    // Handler Keranjang (Sama)
     const handleQuantityChange = (id: number, currQuantity: number) => {
         setCartItems(prevItems =>
             prevItems.map(item =>
@@ -62,22 +87,20 @@ const CartPage: NextPageWithLayout = () => {
         );
     };
 
-    // Menghapus Item
     const handleRemoveItem = (id: number) => {
         setCartItems(prevItems => prevItems.filter(item => item.id !== id));
     };
-
 
 
     return (
         <>
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 <h1 className="text-4xl font-extrabold text-stone-800 mb-8 border-b pb-4">
-                    <FontAwesomeIcon icon={faCartShopping} /> Keranjang Belanja Anda
+                    🛒 Keranjang Belanja Anda
                 </h1>
 
                 {cartItems.length === 0 ? (
-                    /* Tampilan Keranjang Kosong */
+                    // ... (Tampilan Keranjang Kosong)
                     <div className="text-center py-20 bg-white rounded-xl shadow-lg">
                         <p className="text-2xl text-gray-600 mb-4">Keranjang Anda masih kosong.</p>
                         <a
@@ -88,13 +111,12 @@ const CartPage: NextPageWithLayout = () => {
                         </a>
                     </div>
                 ) : (
-                    /* Tampilan Keranjang Ada Isinya */
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-                        {/* --- Kolom Kiri: Daftar Item Keranjang --- */}
+                        {/* --- Kolom Kiri: Daftar Item Keranjang (Sama) --- */}
                         <div className="lg:col-span-2 space-y-4">
                             {cartItems.map(item => (
-                                <CartCardList handleQuantityChange={handleQuantityChange} handleRemoveItem={handleRemoveItem} key={item.id} item={item} />
+                                <CartCardList item={item} handleQuantityChange={handleQuantityChange} key={item.id} handleRemoveItem={handleRemoveItem} />
                             ))}
                         </div>
 
@@ -109,7 +131,7 @@ const CartPage: NextPageWithLayout = () => {
                                 </div>
                                 <div className="flex justify-between border-b pb-3">
                                     <span>Biaya Pengiriman:</span>
-                                    <span className="font-semibold">{formatCurrency(SHIPPING_COST)}</span>
+                                    <span className="font-semibold text-red-600">{formatCurrency(finalShippingCost)}</span>
                                 </div>
                                 <div className="flex justify-between text-2xl font-black text-amber-700 pt-2">
                                     <span>Total Pembayaran:</span>
@@ -117,8 +139,9 @@ const CartPage: NextPageWithLayout = () => {
                                 </div>
                             </div>
 
+                            {/* Tombol yang MEMBUKA MODAL */}
                             <button
-                                onClick={() => alert("Lanjut ke Halaman Checkout...")}
+                                onClick={() => setIsModalOpen(true)} // <-- Tombol pemicu modal
                                 className="w-full bg-green-600 text-white text-xl font-bold py-3 rounded-xl hover:bg-green-700 transition-colors shadow-lg"
                             >
                                 Lanjutkan ke Checkout
@@ -128,12 +151,19 @@ const CartPage: NextPageWithLayout = () => {
                                 href="/menu"
                                 className="block text-center mt-4 text-sm text-amber-700 hover:text-amber-800 font-semibold"
                             >
-                                <FontAwesomeIcon icon={faArrowLeft} /> Lanjut Belanja
+                                ← Lanjut Belanja
                             </a>
                         </div>
                     </div>
                 )}
             </main>
+
+            {/* --- INTEGRASI MODAL --- */}
+            <CheckoutModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onCheckoutConfirm={handleCheckoutConfirm}
+            />
         </>
     );
 };

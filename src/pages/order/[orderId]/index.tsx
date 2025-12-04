@@ -42,7 +42,7 @@ const mockOrderDetail: Order = {
     shippingCost: 30000, // Biaya Kirim
     totalAmount: 480000, // Total Akhir
     shippingAddress: {
-        receiver: 'Rizky Fadillah',
+        receiver: 'Rizal Fadillah',
         phone: '0812-XXXX-9999',
         address: 'Jl. Merdeka No. 10, RT 01/RW 03, Kel. Kebon Kacang, Kec. Tanah Abang, Jakarta Pusat, DKI Jakarta, 10240',
     },

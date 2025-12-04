@@ -48,7 +48,7 @@ const mockInvoiceDetail: Invoice = {
     orderId: 'DLG-20251128-001',
     invoiceDate: '28 November 2025',
     dueDate: '05 Desember 2025',
-    customerName: 'Rizky Fadillah',
+    customerName: 'Rizal Fadillah',
     customerEmail: 'rizky.f@email.com',
     billingAddress: 'Jl. Merdeka No. 10, Jakarta Pusat, DKI Jakarta, 10240',
     shippingAddress: 'Jl. Merdeka No. 10, Jakarta Pusat, DKI Jakarta, 10240', // Seringkali sama dengan Billing
