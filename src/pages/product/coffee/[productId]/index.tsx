@@ -16,13 +16,15 @@ interface DetailedProduct {
     price: number;
     imageUrl: string;
     description: string;
+    rating: number; // Tambahkan rata-rata rating
+    reviewCount: number; // Tambahkan jumlah ulasan
+
     notes: string[];
     origin: string;
     weight: string;
     roastLevel: 'Light' | 'Medium' | 'Dark';
     availableGrinds: string[];
-    rating: number; // Tambahkan rata-rata rating
-    reviewCount: number; // Tambahkan jumlah ulasan
+
 }
 
 // --- (2) Data Testimoni Tiruan ---

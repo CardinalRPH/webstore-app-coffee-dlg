@@ -17,11 +17,13 @@ interface DetailedAccessory {
     price: number;
     imageUrl: string;
     description: string;
+    rating: number;
+    reviewCount: number;
+
     material: string; // Bahan utama
     features: string[]; // Fitur utama
     specs: { [key: string]: string }; // Spesifikasi teknis (kapasitas, berat, dll.)
-    rating: number;
-    reviewCount: number;
+
 }
 
 // --- (2) Data Aksesoris Tiruan yang Detail ---
